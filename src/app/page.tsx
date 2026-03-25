@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useShows } from "@/hooks/useShows";
-import { ShowStatus, SHOW_STATUS_LABELS } from "@/types";
+import { ShowStatus, SHOW_STATUS_LABELS, STREAMING_SERVICE_LABELS } from "@/types";
 import StatusBadge from "@/components/StatusBadge";
 import EmptyState from "@/components/EmptyState";
 import ShowForm from "@/components/ShowForm";
@@ -84,9 +84,16 @@ export default function HomePage() {
                   <span className="font-medium text-gray-800 text-sm leading-snug">{show.title}</span>
                   <StatusBadge status={show.status} />
                 </div>
-                {show.memo && (
-                  <p className="mt-1 text-xs text-gray-400 line-clamp-1">{show.memo}</p>
-                )}
+                <div className="mt-1 flex items-center gap-2 flex-wrap">
+                  {show.streamingService && (
+                    <span className="text-xs text-purple-600">
+                      📺 {STREAMING_SERVICE_LABELS[show.streamingService]}
+                    </span>
+                  )}
+                  {show.memo && (
+                    <p className="text-xs text-gray-400 line-clamp-1">{show.memo}</p>
+                  )}
+                </div>
               </Link>
             </li>
           ))}

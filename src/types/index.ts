@@ -1,9 +1,32 @@
 export type ShowStatus = "watching" | "completed" | "on_hold" | "plan_to_watch" | "dropped";
 
+export type StreamingService =
+  | "netflix"
+  | "abema"
+  | "tver"
+  | "hulu"
+  | "disneyplus"
+  | "amazon"
+  | "unext"
+  | "other";
+
+export const STREAMING_SERVICE_LABELS: Record<StreamingService, string> = {
+  netflix: "Netflix",
+  abema: "ABEMA",
+  tver: "TVer",
+  hulu: "Hulu",
+  disneyplus: "Disney+",
+  amazon: "Prime Video",
+  unext: "U-NEXT",
+  other: "その他",
+};
+
 export interface Show {
   id: string;
   title: string;
   status: ShowStatus;
+  streamingService?: StreamingService;
+  castMemo?: string;
   memo?: string;
   createdAt: string;
   updatedAt: string;

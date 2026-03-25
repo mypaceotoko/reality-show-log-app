@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Show, ShowStatus, SHOW_STATUS_LABELS } from "@/types";
+import { Show, ShowStatus, SHOW_STATUS_LABELS, StreamingService, STREAMING_SERVICE_LABELS } from "@/types";
 
 interface Props {
   initial?: Partial<Show>;
-  onSubmit: (data: { title: string; status: ShowStatus; memo?: string }) => void;
+  onSubmit: (data: { title: string; status: ShowStatus; streamingService?: StreamingService; castMemo?: string; memo?: string }) => void;
   onCancel: () => void;
   submitLabel?: string;
 }
@@ -13,6 +13,8 @@ interface Props {
 export default function ShowForm({ initial, onSubmit, onCancel, submitLabel = "登録する" }: Props) {
   const [title, setTitle] = useState(initial?.title ?? "");
   const [status, setStatus] = useState<ShowStatus>(initial?.status ?? "plan_to_watch");
+  const [streamingService, setStreamingService] = useState<StreamingService | "">(initial?.streamingService ?? "");
+  const [castMemo, setCastMemo] = useState(initial?.castMemo ?? "");
   const [memo, setMemo] = useState(initial?.memo ?? "");
   const [error, setError] = useState("");
 
@@ -22,7 +24,13 @@ export default function ShowForm({ initial, onSubmit, onCancel, submitLabel = "�
       setError("タイトルを入力してください");
       return;
     }
-    onSubmit({ title: title.trim(), status, memo: memo.trim() || undefined });
+    onSubmit({
+      title: title.trim(),
+      status,
+      streamingService: streamingService || undefined,
+      castMemo: castMemo.trim() || undefined,
+      memo: memo.trim() || undefined,
+    });
   };
 
   return (
@@ -55,12 +63,37 @@ export default function ShowForm({ initial, onSubmit, onCancel, submitLabel = "�
       </div>
 
       <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">配信サービス</label>
+        <select
+          value={streamingService}
+          onChange={(e) => setStreamingService(e.target.value as StreamingService | "")}
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400"
+        >
+          <option value="">未設定</option>
+          {(Object.entries(STREAMING_SERVICE_LABELS) as [StreamingService, string][]).map(([val, label]) => (
+            <option key={val} value={val}>{label}</option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">キャストメモ</label>
+        <textarea
+          value={castMemo}
+          onChange={(e) => setCastMemo(e.target.value)}
+          placeholder="推しメンや印象に残った人を書いてね"
+          rows={3}
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none"
+        />
+      </div>
+
+      <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">メモ</label>
         <textarea
           value={memo}
           onChange={(e) => setMemo(e.target.value)}
           placeholder="作品についての自由メモ"
-          rows={3}
+          rows={2}
           className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none"
         />
       </div>

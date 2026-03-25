@@ -6,7 +6,7 @@ import { useShows } from "@/hooks/useShows";
 import { useSeasons } from "@/hooks/useSeasons";
 import { useEpisodes } from "@/hooks/useEpisodes";
 import Link from "next/link";
-import { Season } from "@/types";
+import { Season, STREAMING_SERVICE_LABELS } from "@/types";
 import StatusBadge from "@/components/StatusBadge";
 import ShowForm from "@/components/ShowForm";
 import EpisodeForm from "@/components/EpisodeForm";
@@ -177,10 +177,26 @@ export default function ShowDetailPage({ params }: { params: Promise<{ id: strin
               <button onClick={() => setDeletingShow(true)} className="text-xs text-gray-400 hover:text-red-500">削除</button>
             </div>
           </div>
-          <div className="mt-2">
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <StatusBadge status={show.status} />
+            {show.streamingService && (
+              <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                📺 {STREAMING_SERVICE_LABELS[show.streamingService]}
+              </span>
+            )}
           </div>
-          {show.memo && <p className="mt-3 text-sm text-gray-500">{show.memo}</p>}
+          {show.castMemo && (
+            <div className="mt-3">
+              <p className="text-xs font-medium text-gray-400 mb-0.5">キャストメモ</p>
+              <p className="text-sm text-gray-600 whitespace-pre-wrap">{show.castMemo}</p>
+            </div>
+          )}
+          {show.memo && (
+            <div className="mt-2">
+              <p className="text-xs font-medium text-gray-400 mb-0.5">メモ</p>
+              <p className="text-sm text-gray-500 whitespace-pre-wrap">{show.memo}</p>
+            </div>
+          )}
         </div>
       )}
 
